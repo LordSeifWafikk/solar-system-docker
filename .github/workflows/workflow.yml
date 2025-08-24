@@ -104,7 +104,7 @@ jobs:
 
 
             - name: Build Docker file
-              uses: docker/buiLd-push-action@v6
+              uses: docker/build-push-action@v6
               with : 
                 push: false
                 tags: ${{vars.DOCKERHUB_USERNAME}}/solar-system:${{github.sha}}
@@ -128,4 +128,10 @@ jobs:
                 
                 
                 
-                
+            - name: Build Docker file
+              uses: docker/build-push-action@v6
+              with : 
+                push: true
+                tags: |
+                  ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{github.sha}}
+                  ghcr.io/${{github.repository_owner}}/solar-system:${{github.sha}}
