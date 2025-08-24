@@ -38,4 +38,12 @@ jobs:
               run: npm install
 
             - name: unit testing
+              id: NodeJs-unit-testing-step
               run: npm test
+
+            - name: archive test result
+              if: steps.NodeJs-unit-testing-step.outcome == 'failure' || steps.NodeJs-unit-testing-step.outcome == 'success'
+              uses: actions/upload-artifact@v4.6.2
+              with:
+                name: sp-test-result-${{github.sha}}
+                path: test-results.xml
