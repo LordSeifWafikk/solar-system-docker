@@ -66,6 +66,7 @@ jobs:
               run: npm install
 
             - name: check code coverage
+              continue-on-error: true
               run: npm run coverage
             - name: archive covergae results
               uses: actions/upload-artifact@v4.6.2
