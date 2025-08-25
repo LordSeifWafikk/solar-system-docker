@@ -107,7 +107,7 @@ jobs:
               uses: docker/build-push-action@v6
               with : 
                 push: false
-                tags: ${{vars.DOCKERHUB_USERNAME}}/solar-system:${{github.sha}}
+                tags: ${{vars.DOCKERHUB_USERNAME}}/solar-system:latest
 
             - name: Test Docker image
               run: |
@@ -117,7 +117,7 @@ jobs:
                 -e MONGO_URI=$MONGO_URI \
                 -e MONGO_USERNAME=$MONGO_USERNAME \
                 -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                 ${{vars.DOCKERHUB_USERNAME}}/solar-system:${{github.sha}}
+                 ${{vars.DOCKERHUB_USERNAME}}/solar-system:latest
                  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app
 
                  echo $IP
@@ -135,11 +135,11 @@ jobs:
               with : 
                 push: true
                 tags: |
-                  ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{github.sha}}
-                  ghcr.io/${{env.OWNER_LC }}/solar-system:${{github.sha}}
+                  ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+                  ghcr.io/${{env.OWNER_LC }}/solar-system:latest
 
     terraform:
-
+      needs: docker
       name: terrafrm-deployment
       runs-on: ubuntu-latest
       environment: production
