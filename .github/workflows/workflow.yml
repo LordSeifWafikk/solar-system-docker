@@ -137,3 +137,73 @@ jobs:
                 tags: |
                   ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{github.sha}}
                   ghcr.io/${{env.OWNER_LC }}/solar-system:${{github.sha}}
+
+    terraform:
+
+      name: terrafrm-deployment
+      runs-on: ubuntu-latest
+      environment: production
+      steps:
+          - name: checkout repo
+            uses: actions/checkout@v5
+
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v4.3.1
+            with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: us-east-2
+
+
+          - name : Setup Terraform 
+            uses: hashicorp/setup-terraform@v3
+            with:
+              terraform_version: "1.1.7"
+
+          - name: terraform init
+            run: terraform init
+            working-directory: ./terraform
+
+
+          - name: terraform plan
+            run: terraform plan
+            working-directory: ./terraform
+
+          - name: terraform apply
+            run: terraform apply
+            working-directory: ./terraform
+
+    deploy:
+      needs: terraform
+      name: deploy to eks
+      runs-on: ubuntu-latest
+
+      steps:
+          - name: checkout repo
+            uses: actions/checkout@v5
+
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v4.3.1
+            with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: us-west-2
+
+
+          - name: update kubeconfig
+            run: |
+                  aws eks --region us-west-2 update-kubeconfig --name stage-eks-cluster
+
+          - name: Trigger app deployment
+            uses: statsig-io/kubectl-via-eksctl@main
+            env:
+              aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              region: us-west-2
+              cluster: stage-eks-cluster
+
+          - name: Deploy k8s deployments
+            run: |
+              kubectl apply -f deployment.yml
+              kubectl apply -f service.yml
+            working-directory: ./kubernetes
