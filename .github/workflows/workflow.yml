@@ -190,7 +190,7 @@ jobs:
 
           - name: update kubeconfig
             run: |
-                  aws eks --region us-east-1 update-kubeconfig --name stage-eks-cluster
+                  aws eks --region us-east-1 update-kubeconfig --name GP-cluster
 
           - name: Trigger app deployment
             uses: statsig-io/kubectl-via-eksctl@main
@@ -198,7 +198,7 @@ jobs:
               aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               region: us-east-1
-              cluster: stage-eks-cluster
+              cluster: GP-cluster
 
           - name: Deploy k8s deployments
             run: |
@@ -214,7 +214,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         AWS_REGION: us-east-1
-        EKS_CLUSTER_NAME: stage-eks-cluster
+        EKS_CLUSTER_NAME: GP-cluster
         GRAFANA_ADMIN_PASSWORD: $${{secrets.grafana_admin_password}}
 
       steps:
@@ -231,7 +231,7 @@ jobs:
 
           - name: update kubeconfig
             run: |
-                  aws eks --region us-east-1 update-kubeconfig --name stage-eks-cluster
+                  aws eks --region us-east-1 update-kubeconfig --name GP-cluster
 
           - name: Trigger app deployment
             uses: statsig-io/kubectl-via-eksctl@main
@@ -239,7 +239,7 @@ jobs:
               aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               region: us-east-1
-              cluster: stage-eks-cluster
+              cluster: GP-cluster
 
 
           - name: create monitoring namespace
