@@ -255,8 +255,9 @@ jobs:
             run: |
               envsubst < values.yml > /tmp/values.rendered.yaml
               echo "Rendered values:"
-              tail -n +1 /tmp_values.rendered.yaml
+              tail -n +1 /tmp/values.rendered.yaml
             working-directory: ./kubernetes
+
 
           # - name: Install/Upgrade kube-prometheus-stack
           #   run: |
