@@ -11,21 +11,21 @@ spec:
     metadata:
       labels:
         app: microservice
-      spec:
-        containers:
-        - name: microservice
-          image: seifwafeek/solar-system:latest
-          ports:
-          - containerPort: 3000
-          env:
-            - name: MONGO_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_USERNAME
+    spec:   
+      containers:
+      - name: microservice
+        image: seifwafeek/solar-system:latest
+        ports:
+        - containerPort: 3000
+        env:
+          - name: MONGO_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_USERNAME
 
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_PASSWORD
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_PASSWORD
