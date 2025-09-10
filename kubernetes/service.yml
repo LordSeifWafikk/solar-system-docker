@@ -5,8 +5,8 @@ metadata:
 spec:
   selector:
     app: microservice
-    ports:
+  ports:
     - protocol: TCP
       port: 80
       targetPort: 3000
-    type: LoadBalancer
+  type: LoadBalancer
