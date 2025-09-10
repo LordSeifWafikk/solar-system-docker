@@ -210,7 +210,7 @@ jobs:
 
     deploy-monitoring:
       needs: deploy
-      name: deploy to EKS
+      name: monitoring
       runs-on: ubuntu-latest
       env:
         AWS_REGION: us-east-1
@@ -243,7 +243,7 @@ jobs:
 
 
           - name: create monitoring namespace
-            run: kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f
+            run: kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 
           - name: Add Helm repos
             run: |
