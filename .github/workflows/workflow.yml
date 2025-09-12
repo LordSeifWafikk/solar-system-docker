@@ -208,12 +208,23 @@ jobs:
 
           - name: Show app external URL
             run: |
-              echo "⏳ Waiting for LoadBalancer IP..."
-              kubectl wait --for=condition=available deploy/microservice --timeout=10m
+              echo "⏳ Waiting for LoadBalancer hostname..."
+              for i in {1..30}; do
+                APP_URL=$(kubectl get svc microservice-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
+                if [ -n "$APP_URL" ]; then
+                  break
+                fi
+                echo "Still waiting... ($i/30)"
+                sleep 20
+              done
 
-              APP_URL=$(kubectl get svc microservice-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+              if [ -z "$APP_URL" ]; then
+                echo "❌ LoadBalancer hostname not assigned in time" | tee -a $GITHUB_STEP_SUMMARY
+                exit 1
+              fi
 
               echo "🌍 **App URL:** [http://$APP_URL](http://$APP_URL)" | tee -a $GITHUB_STEP_SUMMARY
+
 
 
 
