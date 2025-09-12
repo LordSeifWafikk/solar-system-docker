@@ -2,7 +2,7 @@ name: Destroy Infrastructure
 
 on:
   workflow_run:
-    workflows: deploy-monitoring   # 👈 name of your monitoring workflow
+    workflows: ["monitoring"]   # 👈 name of your monitoring workflow
     types:
       - completed
 
