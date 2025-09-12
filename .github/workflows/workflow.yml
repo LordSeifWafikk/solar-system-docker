@@ -265,6 +265,10 @@ jobs:
           #     --namespace monitoring \
           #     --values /tmp_values.rendered.yaml \
           #     --wait --timeout 15m
+
+          - name: Check cluster connectivity
+            run: kubectl get nodes
+
           - name: Install Prometheus
             run: |
               helm upgrade --install prometheus prometheus-community/prometheus \
