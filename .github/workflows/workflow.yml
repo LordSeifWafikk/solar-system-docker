@@ -293,9 +293,9 @@ jobs:
             run: |
               echo "Waiting for LoadBalancer IPs..."
               kubectl -n monitoring wait --for=condition=available deploy/kube-prometheus-stack-grafana --timeout=10m
-              kubectl -n monitoring get svc -o wide
-              echo "Grafana URL:"
-              kubectl -n monitoring get svc kube-prometheus-stack-grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-              echo "Prometheus URL:"
-              kubectl -n monitoring get svc kube-prometheus-stack-prometheus -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-              
+
+              GRAFANA_URL=$(kubectl -n monitoring get svc kube-prometheus-stack-grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+              PROM_URL=$(kubectl -n monitoring get svc kube-prometheus-stack-prometheus -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+              echo "Grafana URL: http://$GRAFANA_URL" | tee -a $GITHUB_STEP_SUMMARY
+              echo "Prometheus URL: http://$PROM_URL" | tee -a $GITHUB_STEP_SUMMARY
