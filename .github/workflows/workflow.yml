@@ -293,17 +293,11 @@ jobs:
           - name: Install Prometheus
             run: |
               helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
-              --namespace monitoring \
-              --create-namespace \
-              --timeout 15m
-
-          - name: Install Grafana
-            run: |
-              helm upgrade --install grafana grafana/grafana \
-              --namespace monitoring \
-              --set adminPassword=admin \
-              --wait \
-              --timeout 15m
+                --namespace monitoring \
+                --set grafana.service.type=LoadBalancer \
+                --set prometheus.service.type=LoadBalancer \
+                --create-namespace \
+                --wait --timeout 15m
 
           - name: Apply ServiceMonitor for my app
             run: |
